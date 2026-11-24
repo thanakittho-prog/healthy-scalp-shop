@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthy Scalp Shop</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f7faf7;color:#243b2b}
+header{background:#fff;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.logo{font-size:22px;font-weight:bold;color:#26734d}
+button{border:0;border-radius:9px;padding:12px 18px;background:#26734d;color:white;cursor:pointer}
+.hero{text-align:center;padding:65px 20px;background:#e6f2e8}
+.hero h1{font-size:36px;margin-bottom:12px}
+.hero p{color:#55715e}
+.products{max-width:1000px;margin:45px auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 3px 15px #0000000c}
+.photo{height:190px;background:#edf5ed;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:65px}
+.price{font-size:22px;font-weight:bold;color:#26734d}
+.cart{max-width:650px;margin:30px auto;padding:20px;background:white;border-radius:15px}
+input,textarea{width:100%;padding:12px;margin:7px 0 15px;border:1px solid #ccc;border-radius:8px}
+footer{text-align:center;padding:30px;background:#e6f2e8}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">🌿 Healthy Scalp Shop</div>
+ <button onclick="document.getElementById('cart').scrollIntoView()">🛒 ตะกร้า (<span id="count">0</span>)</button>
+</header>
+
+<section class="hero">
+ <h1>ดูแลหนังศีรษะ เริ่มต้นที่คุณ</h1>
+ <p>เลือกผลิตภัณฑ์ดูแลเส้นผมที่เหมาะกับคุณ</p>
+ <button onclick="document.getElementById('products').scrollIntoView()">เลือกซื้อสินค้า</button>
+</section>
+
+<section class="products" id="products">
+ <h2>สินค้าของเรา</h2>
+ <div class="grid">
+  <div class="card">
+   <div class="photo">🧴</div>
+   <h3>แชมพูยาขจัดรังแค</h3>
+   <p>รหัสสินค้า SHP001 | ขนาด 100 ml</p>
+   <p class="price">159 บาท</p>
+   <button onclick="add('SHP001','แชมพูยาขจัดรังแค',159)">เพิ่มลงตะกร้า</button>
+  </div>
+  <div class="card">
+   <div class="photo">🧴</div>
+   <h3>แชมพูดูแลหนังศีรษะ</h3>
+   <p>รหัสสินค้า SHP002 | ขนาด 200 ml</p>
+   <p class="price">259 บาท</p>
+   <button onclick="add('SHP002','แชมพูดูแลหนังศีรษะ',259)">เพิ่มลงตะกร้า</button>
+  </div>
+ </div>
+</section>
+
+<section class="cart" id="cart">
+ <h2>🛒 ตะกร้าสินค้า</h2>
+ <div id="items">ยังไม่มีสินค้า</div>
+ <h3>ยอดรวม: <span id="total">0</span> บาท</h3>
+ <hr>
+ <h2>ข้อมูลจัดส่ง</h2>
+ <form id="orderForm">
+  <label>ชื่อผู้รับ</label>
+  <input id="customer" required placeholder="ชื่อ-นามสกุล">
+  <label>เบอร์โทรศัพท์</label>
+  <input id="phone" required placeholder="08XXXXXXXX" type="tel">
+  <label>ที่อยู่จัดส่ง</label>
+  <textarea id="address" required placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"></textarea>
+  <button type="submit">ยืนยันคำสั่งซื้อ</button>
+ </form>
+ <p id="message"></p>
+</section>
+<footer>Healthy Scalp Shop | ขอบคุณที่ใช้บริการ</footer>
+
+<script>
+let cart=[];
+function add(sku,name,price){
+ let item=cart.find(x=>x.sku===sku);
+ if(item)item.quantity++;
+ else cart.push({sku,name,price,quantity:1});
+ render();
+}
+function render(){
+ document.getElementById('count').textContent=cart.reduce((s,x)=>s+x.quantity,0);
+ document.getElementById('items').innerHTML=cart.length?
+ cart.map(x=>`${x.name} × ${x.quantity} = ${x.price*x.quantity} บาท`).join('<br>'):
+ 'ยังไม่มีสินค้า';
+ document.getElementById('total').textContent=cart.reduce((s,x)=>s+x.price*x.quantity,0);
+}
+document.getElementById('orderForm').addEventListener('submit',function(e){
+ e.preventDefault();
+ if(!cart.length){alert('กรุณาเลือกสินค้าก่อน');return;}
+ document.getElementById('message').textContent=
+ 'หน้าร้านพร้อมแล้ว ขั้นตอนถัดไปเราจะเชื่อมระบบบันทึกคำสั่งซื้อเข้ากับ Google Sheets';
+});
+</script>
+</body>
+</html>
